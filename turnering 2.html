@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shuffleboard-turnering</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0e1c2f;
+    --blue: #1a3a5c;
+    --gold: #d4a843;
+    --cream: #f7f2e8;
+    --white: #ffffff;
+    --fade: #8a9bb0;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--navy);
+    font-family: 'Lora', Georgia, serif;
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 24px 70px;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.03) 60px,
+        rgba(255,255,255,0.03) 61px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(255,255,255,0.03) 60px,
+        rgba(255,255,255,0.03) 61px
+      );
+  }
+
+  /* Shuffleboard lane decoration */
+  .lane {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(212,168,67,0.06) 100%);
+    border-left: 1px solid rgba(212,168,67,0.15);
+    border-right: 1px solid rgba(212,168,67,0.15);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 12vw, 7rem);
+    color: var(--white);
+    letter-spacing: 4px;
+    line-height: 0.95;
+    position: relative;
+  }
+
+  .hero h1 span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    margin-top: 20px;
+    color: var(--fade);
+    font-size: 1rem;
+    font-style: italic;
+    position: relative;
+  }
+
+  .hero-divider {
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+    margin: 28px auto;
+    position: relative;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-top: 2px;
+  }
+
+  /* ── SECTIONS ── */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section {
+    padding: 60px 0;
+    border-bottom: 1px solid rgba(14,28,47,0.1);
+  }
+
+  section:last-of-type { border-bottom: none; }
+
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    letter-spacing: 2px;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #3a4a5a;
+    font-size: 1rem;
+    margin-bottom: 16px;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* ── FORMAT CARDS ── */
+  .format-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .format-card {
+    background: var(--navy);
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .format-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--gold);
+  }
+
+  .format-card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .format-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .format-card-label {
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-top: 4px;
+  }
+
+  .format-card-desc {
+    font-size: 0.82rem;
+    color: rgba(247,242,232,0.7);
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .steps {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    padding-bottom: 32px;
+  }
+
+  .step:last-child { padding-bottom: 0; }
+
+  .step-line {
+    position: absolute;
+    left: 19px; top: 40px;
+    width: 2px;
+    bottom: 0;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+
+  .step:last-child .step-line { display: none; }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-content h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 0.9rem;
+    color: #4a5a6a;
+    margin-bottom: 0;
+  }
+
+  /* ── SCORING ── */
+  .score-example {
+    background: var(--navy);
+    padding: 28px;
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-example::before {
+    content: '15';
+    position: absolute;
+    right: -10px; top: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10rem;
+    color: rgba(212,168,67,0.06);
+    line-height: 1;
+  }
+
+  .score-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .score-row:last-child { margin-bottom: 0; }
+
+  .score-team {
+    font-size: 0.85rem;
+    color: var(--cream);
+    flex: 1;
+    font-style: italic;
+  }
+
+  .score-bar-wrap {
+    flex: 2;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: var(--gold);
+    transition: width 1s ease;
+  }
+
+  .score-bar.losing { background: rgba(255,255,255,0.25); }
+
+  .score-pts {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .score-pts.losing { color: var(--fade); }
+
+  .score-note {
+    margin-top: 16px;
+    font-size: 0.78rem;
+    color: var(--fade);
+    font-style: italic;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 12px;
+  }
+
+  /* ── WINNER ── */
+  .winner-box {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    padding: 40px 32px;
+    text-align: center;
+    margin-top: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .winner-box::before {
+    content: '🏆';
+    position: absolute;
+    font-size: 8rem;
+    opacity: 0.06;
+    top: -10px; right: 20px;
+  }
+
+  .winner-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  .winner-box p {
+    color: rgba(247,242,232,0.75);
+    font-size: 0.95rem;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 20px;
+  }
+
+  .tl-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    padding: 6px 0 24px;
+    white-space: nowrap;
+  }
+
+  .tl-event {
+    padding: 6px 0 24px;
+    border-left: 2px solid rgba(14,28,47,0.15);
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .tl-event::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 12px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .tl-event strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    color: var(--navy);
+  }
+
+  .tl-event span {
+    font-size: 0.85rem;
+    color: #5a6a7a;
+    font-style: italic;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--navy);
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .cta-section h2 {
+    color: var(--white);
+    font-size: 2.8rem;
+  }
+
+  .cta-section p {
+    color: var(--fade);
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    padding: 16px 40px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .cta-btn:hover { background: #e8c060; transform: translateY(-1px); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .hero-eyebrow  { animation: fadeUp 0.5s 0.1s ease both; }
+  .hero h1       { animation: fadeUp 0.5s 0.2s ease both; }
+  .hero-sub      { animation: fadeUp 0.5s 0.3s ease both; }
+  .hero-divider  { animation: fadeUp 0.5s 0.4s ease both; }
+  .hero-stats    { animation: fadeUp 0.5s 0.5s ease both; }
+
+  .format-card:nth-child(1) { animation-delay: 0.1s; }
+  .format-card:nth-child(2) { animation-delay: 0.2s; }
+  .format-card:nth-child(3) { animation-delay: 0.3s; }
+  .format-card:nth-child(4) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="lane"></div>
+  <div class="hero-eyebrow">Företagsturnering 2026</div>
+  <h1>Shuffleboard<span>Challenge</span></h1>
+  <p class="hero-sub">Välkommen att delta i årets interna turnering</p>
+  <div class="hero-divider"></div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">20</div>
+      <div class="hero-stat-label">Spelare</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">Bord</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">8</div>
+      <div class="hero-stat-label">Omgångar</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">2h</div>
+      <div class="hero-stat-label">Total tid</div>
+    </div>
+  </div>
+</div>
+
+<!-- FORMAT -->
+<section>
+  <div class="container">
+    <div class="section-label">Turneringsformat</div>
+    <h2>Hur det fungerar</h2>
+    <p>Turneringen spelas i formatet <em>Social Shuffleboard</em> — ett system där ingen partner upprepas och alla möter så många olika motståndare som möjligt under kvällen.</p>
+
+    <div class="format-grid">
+      <div class="format-card">
+        <div class="format-card-num">20</div>
+        <div class="format-card-label">Spelare</div>
+        <div class="format-card-desc">Alla spelar varje omgång — ingen behöver vänta</div>
+      </div>
+      <div class="format-card">
+        <div class="format-card-num">4</div>
+        <div class="format-card-label">Bord</div>
+        <div class="format-card-desc">Bord A, B, C och D — 2 mot 2 eller 2 mot 3 spelare</div>
+      </div>
+      <div class="format-card">
+        <div class="format-card-num">8</div>
+        <div class="format-card-label">Omgångar</div>
+        <div class="format-card-desc">15 minuter per omgång — totalt 2 timmar speltid</div>
+      </div>
+      <div class="format-card">
+        <div class="format-card-num">1×</div>
+        <div class="format-card-label">Partner per kväll</div>
+        <div class="format-card-desc">Du spelar med varje partner max en gång under kvällen</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="container">
+    <div class="section-label">Steg för steg</div>
+    <h2>En omgång i korthet</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Lagindelning</h3>
+          <p>Inför varje omgång sätts du ihop med nya partners och motståndare. Systemet ser till att du aldrig spelar med samma partner två gånger.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Spela 15 minuter</h3>
+          <p>Varje match spelas på ett bord i 15 minuter. Lagen är 2–3 spelare och spelar mot varandra på bordet.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Registrera resultatet</h3>
+          <p>När omgången är klar matas resultatet in — 0 till 15 poäng per lag. Varje spelare tar med sig lagets poäng till sin individuella total.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Nästa omgång</h3>
+          <p>Nya lag, nytt bord — och spelet fortsätter. Poängtabellen uppdateras i realtid efter varje omgång.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCORING -->
+<section>
+  <div class="container">
+    <div class="section-label">Poängsystemet</div>
+    <h2>Så räknas poängen</h2>
+    <p>Varje match spelas upp till <strong>15 poäng</strong>. Det slutliga resultatet — till exempel 12–7 — avgör hur många poäng varje spelare samlar in.</p>
+    <p>Det spelar ingen roll om du vinner eller förlorar en enskild match. Det är summan av <em>alla dina poäng</em> över hela kvällen som avgör din placering.</p>
+
+    <div class="score-example">
+      <div class="score-title">Exempel — Bord A, Omgång 3</div>
+      <div class="score-row">
+        <div class="score-team">Anna &amp; Erik</div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:80%"></div></div>
+        <div class="score-pts">12</div>
+      </div>
+      <div class="score-row">
+        <div class="score-team">Maria &amp; Johan</div>
+        <div class="score-bar-wrap"><div class="score-bar losing" style="width:47%"></div></div>
+        <div class="score-pts losing">7</div>
+      </div>
+      <div class="score-note">Anna och Erik får 12 poäng vardera. Maria och Johan får 7 poäng vardera. Alla fyra adderar detta till sin totalsumma.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WINNER -->
+<section>
+  <div class="container">
+    <div class="section-label">Vinnaren</div>
+    <h2>Vem tar hem titeln?</h2>
+    <p>Efter alla 8 omgångar summeras varje spelares totala poäng. Den spelare med <strong>högst totalpoäng</strong> vinner turneringen.</p>
+    <p>Eftersom poäng samlas in oavsett vinst eller förlust lönar det sig alltid att spela bra — även i en förlorad match kan du plocka hem värdefulla poäng.</p>
+
+    <div class="winner-box">
+      <h3>🏆 Högst totalpoäng vinner</h3>
+      <p>Alla 8 omgångar × max 15 poäng = upp till 120 poäng totalt. Kampen om toppen kan vara jämn ända in i sista omgången.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section>
+  <div class="container">
+    <div class="section-label">Kvällens upplägg</div>
+    <h2>Tidplan</h2>
+    <div class="timeline">
+      <div class="tl-time">+0 min</div>
+      <div class="tl-event">
+        <strong>Samling &amp; introduktion</strong>
+        <span>Regler genomgås, lag för omgång 1 presenteras</span>
+      </div>
+      <div class="tl-time">+15 min</div>
+      <div class="tl-event">
+        <strong>Omgång 1–4</strong>
+        <span>Fyra omgångar à 15 minuter med kort paus emellan</span>
+      </div>
+      <div class="tl-time">+75 min</div>
+      <div class="tl-event">
+        <strong>Halvtidspaus</strong>
+        <span>Poängtabellen visas — vem leder efter halva turneringen?</span>
+      </div>
+      <div class="tl-time">+90 min</div>
+      <div class="tl-event">
+        <strong>Omgång 5–8</strong>
+        <span>Fyra avslutande omgångar — avgörandet närmar sig</span>
+      </div>
+      <div class="tl-time">+150 min</div>
+      <div class="tl-event">
+        <strong>Prisutdelning 🏆</strong>
+        <span>Slutresultatet presenteras och vinnaren koras</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="container">
+    <h2>Är du med?</h2>
+    <p>Anmäl dig genom att svara på detta mail. Platserna är begränsade till 20 spelare — först till kvarn gäller.</p>
+    <a href="mailto:?subject=Anmälan Shuffleboard-turnering" class="cta-btn">Svara &amp; anmäl dig</a>
+  </div>
+</div>
+
+</body>
+</html>
